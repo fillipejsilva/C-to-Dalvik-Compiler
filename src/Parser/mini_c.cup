@@ -1,0 +1,236 @@
+package org.parser;
+import java_cup.runtime.*;
+import org.tree.*;
+
+/*---------- Codigo do programador ----------*/
+
+parser code  {:
+	
+  public static int erro = 0;
+  
+  public void report_error(String message, Object info) {
+  	erro++;  
+	StringBuffer m = new StringBuffer("\nErro sintatico numero " + erro);
+	if (info instanceof java_cup.runtime.Symbol)	
+	{
+		java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+		if(s.left >=0)
+		{
+		  m.append(" na linha " + (s.left+1));
+		  /* if(s.right >=0)
+		    m.append(" coluna " + (s.right+1));*/
+		}
+	}
+	System.out.println(m);
+  }
+ 
+  public void report_fatal_error (String mensagem, Object info) {
+    report_fatal_error_message(mensagem, info);
+    System.exit(1);
+  }
+
+  public void report_fatal_error_message (String mensagem, Object info) {
+    erro++;  
+	StringBuffer m = new StringBuffer("Erro sintatico numero " + erro + ".Impossivel recuperar do erro, finalizando parser!");
+	System.out.println(m);
+    System.exit(1);
+  }
+
+	public void check(){
+		if(erro > 0){
+			System.exit(1);
+		}
+	}
+
+:};
+
+/*---------- Terminais ----------*/
+
+/*Parentizacao*/
+terminal String LPAREN;
+terminal String RPAREN;
+terminal String LCHAVE;
+terminal String RCHAVE;
+terminal String LCOLCH;
+terminal String RCOLCH;
+
+/*Pontuacao*/
+terminal String VIRG;
+terminal String ECOM;
+terminal String SHARP;
+terminal String PTVIRG;
+
+/*Tipos e Constantes*/
+terminal String CHAR;
+terminal String INT;
+terminal String FLOAT;
+terminal Integer LINT;
+terminal Float LFLOAT;
+terminal String LCHAR;
+terminal String STRING;
+terminal String IDF;
+
+/*Palavras reservadas*/
+terminal String INCLUDE;
+terminal String ELSE;
+terminal String IF;
+terminal String MAIN;
+terminal String PRINTF;
+terminal String SCANF;
+terminal String RETURN;
+terminal String VOID;
+terminal String WHILE;
+
+/*Operacoes*/
+terminal String OU;
+terminal String NEG;
+terminal String ATRIB;
+terminal String E;
+terminal String EQ;
+terminal String MAIEQ;
+terminal String MENEQ;
+terminal String MAIOR;
+terminal String MENOR;
+terminal String DIF;
+terminal String DIV;
+terminal String MULT;
+terminal String SUB;
+terminal String SOMA;
+
+/*---------- Nao terminais ----------*/
+
+non terminal Arquivo arquivo;
+non terminal FuncaoBloco funcaoBloco;
+non terminal Funcao funcao;
+non terminal FuncaoPrincipal funcaoPrincipal;
+non terminal Tipo tipo;
+non terminal EntradaFuncao entradaFuncao;
+non terminal EntradaFuncao restoEntrada;
+non terminal Entrada entrada;
+non terminal Programa programa;
+non terminal Ret ret;
+non terminal DeclaraLista declaraLista;
+non terminal Declara declara;
+non terminal Vetor vetor;
+non terminal Comandos comandos;
+non terminal Comando comando;
+non terminal InList inList;
+non terminal Elsis elsis;
+non terminal Expressao expressao;
+non terminal ExpressaoLista expressaoLista;
+non terminal ExpressaoLista expressaoListaResto;
+non terminal String prologo;
+
+/*---------- Precedencias ----------*/
+
+precedence left E,OU;
+precedence left MENOR,MAIOR,MAIEQ,MENEQ,DIF;
+precedence left SOMA,SUB;
+precedence left MULT,DIV;
+precedence right NEG;
+
+/*---------- Por onde iniciar ----------*/
+
+start with arquivo;
+
+/*---------- Analisador sintatico (Gera AST) ----------*/
+
+arquivo ::= prologo funcaoBloco:fncb funcaoPrincipal:fncp {: RESULT = new Arquivo(fncb,fncp); :}
+	    ;
+
+prologo ::= SHARP INCLUDE SHARP INCLUDE
+	    ;
+
+funcaoBloco ::=	/*vazio*/ {: RESULT = new FuncaoBloco(); :}
+		| funcaoBloco:fncb funcao:fnc {: RESULT = fncb.append(fnc); :}
+		;
+
+funcao ::= tipo:tpo IDF:i LPAREN entradaFuncao:etrdfnc RPAREN LCHAVE programa:prgm RCHAVE {: RESULT = new Funcao(tpo,new Idf(i),etrdfnc,prgm); :}
+	   ;
+
+funcaoPrincipal ::= MAIN LPAREN RPAREN LCHAVE programa:prgm RCHAVE {: RESULT = new FuncaoPrincipal(prgm); :}
+		    ;
+
+tipo ::= CHAR:c {: RESULT = new CharTipo(); :}
+	 | INT:it {: RESULT  = new IntTipo(); :}
+	 | FLOAT:fl {: RESULT  = new FloatTipo(); :}
+	 | VOID:vd {: RESULT = new VoidTipo(); :}
+	 ;
+
+entradaFuncao ::= /*vazio*/ {: RESULT = new EntradaFuncao(); :}
+		  | restoEntrada:retrd entrada:e {: RESULT = retrd.append(e); :}
+		  ;
+
+restoEntrada ::= /*vazio*/ {: RESULT = new EntradaFuncao(); :}
+		 | restoEntrada:retrd entrada:e VIRG {: RESULT = retrd.append(e); :}
+		 ;
+
+entrada ::= tipo:tpo IDF:i {: RESULT = new Entrada(tpo,new Idf(i)); :}
+	    ;
+
+programa ::= declaraLista:declst comandos:cmds ret:r expressao:exp PTVIRG {: RESULT = new Programa(declst,cmds,r,exp); :}
+	     ;
+
+ret ::= RETURN:r {: RESULT = new Ret(r); :}
+	;
+
+declaraLista ::= /*vazio*/ {: RESULT = new DeclaraLista(); :}
+		 | declaraLista:dclst declara:dcl {: RESULT = dclst.append(dcl);  :}
+		 ;
+
+declara ::= tipo:tpo IDF:i vetor:vt PTVIRG {: RESULT = new Declara(tpo,vt,new Idf(i)); :}
+	    ;
+
+vetor ::= /*vazio*/ {: RESULT = new Vetor(0);:}
+	  | LCOLCH LINT:vt RCOLCH {: RESULT = new Vetor(vt); :}
+	  ;
+
+comandos ::= /*vazio*/ {: RESULT = new Comandos(); :}
+	     | comandos:cmds comando:cmd {: RESULT = cmds.append(cmd); :}
+	     ;
+
+comando ::= PRINTF LPAREN STRING:str RPAREN PTVIRG {: RESULT = new Print(str); :}
+	    | PRINTF LPAREN STRING:str VIRG IDF:i RPAREN PTVIRG {: RESULT = new PrintId(str,new Idf(i)); :}
+	    | SCANF LPAREN STRING:str VIRG inList:inlst RPAREN PTVIRG {: RESULT = new Scan(str,inlst); :}
+	    | WHILE LPAREN expressao:exp RPAREN LCHAVE comandos:cmds RCHAVE {: RESULT = new ComandoWhile(exp,cmds); :}
+	    | IF LPAREN expressao:exp RPAREN LCHAVE comandos:cmds RCHAVE elsis:elss {: RESULT = new ComandoIf(exp,cmds,elss); :}
+	    | IDF:i ATRIB expressao:exp PTVIRG {: RESULT = new Atribuicao(new Idf(i),exp); :}
+	    | IDF:i LCOLCH expressao:exp1 RCOLCH ATRIB expressao:exp2 PTVIRG {: RESULT = new VetorAtrib(new Idf(i),exp1,exp2); :}
+	    | IDF:i LPAREN expressaoLista:explst RPAREN PTVIRG {: RESULT = new ChamadaFuncao(new Idf(i),explst); :}
+	    | error PTVIRG
+	    ;
+
+inList ::= ECOM IDF:i {:RESULT = new InList(new Idf(i)); :}
+	   ;
+
+elsis ::= /*vazio*/ {:RESULT = new Elsis(); :}
+	  | ELSE LCHAVE comandos:cmds RCHAVE {: RESULT = new Elsis(cmds); :}
+	  ;
+
+expressao ::= expressao:exp1 EQ expressao:exp2 {: RESULT = new Igualdade(exp1,exp2); :}
+	      | expressao:exp1 SOMA expressao:exp2 {: RESULT = new Adicao(exp1,exp2); :} 
+	      | expressao:exp1 SUB expressao:exp2 {: RESULT = new Subtracao(exp1,exp2); :}
+	      | expressao:exp1 DIV expressao:exp2 {: RESULT = new Divisao(exp1,exp2); :}
+	      | expressao:exp1 MULT expressao:exp2 {: RESULT = new Multiplicacao(exp1,exp2); :}
+	      | expressao:exp1 MAIEQ expressao:exp2 {: RESULT = new MaiorIgual(exp1,exp2); :}
+	      | expressao:exp1 MENEQ expressao:exp2 {: RESULT = new MenorIgual(exp1,exp2); :}
+	      | expressao:exp1 MAIOR expressao:exp2 {: RESULT = new Maior(exp1,exp2); :}
+	      | expressao:exp1 MENOR expressao:exp2 {: RESULT = new Menor(exp1,exp2); :}
+	      | expressao:exp1 DIF expressao:exp2 {: RESULT = new Diferente(exp1,exp2); :}
+	      | expressao:exp1 E expressao:exp2 {: RESULT = new E(exp1,exp2); :}
+	      | expressao:exp1 OU expressao:exp2 {: RESULT = new Ou(exp1,exp2); :}
+	      | IDF:i LPAREN expressaoLista:explst RPAREN {: RESULT = new TermoFuncao(new Idf(i),explst); :}
+	      | IDF:i {: RESULT = new ExpId(new Idf(i)); :}
+	      | LPAREN expressao:exp RPAREN {: RESULT = new TermoParenteses(exp); :}
+	      | LCHAR:c {: RESULT = new ExpChar(c); :}
+        | LINT:it {: RESULT = new ExpInt(it); :}
+        | LFLOAT:fl {: RESULT = new ExpFloat(fl); :}
+	      | NEG expressao:exp {: RESULT = new TermoNegacao(exp); :}
+	      ;
+
+expressaoLista ::= /*vazio*/ {: RESULT = new ExpressaoLista(); :}
+                   | expressaoListaResto:explst expressao:exp {: RESULT = explst.append(exp); :}
+                   ;
+expressaoListaResto ::= /*vazio*/ {: RESULT = new ExpressaoLista(); :} 
+                        | expressaoListaResto:explst expressao:exp VIRG {: RESULT = explst.append(exp); :}
+                        ; 

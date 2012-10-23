@@ -1,0 +1,4 @@
+Main-Class: org.Maluco
+Class-Path: lib/java-cup-11a-runtime.jar
+
+
