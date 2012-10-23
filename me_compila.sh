@@ -32,9 +32,9 @@ main()
 	verifica	
 
 	echo '-->compilando AST e classes para controle e criação da tabela de simbolos'
-	export CLASSGEN_HOME=$DIR/classgen
+	export CLASSGEN_HOME=$DIR/src/classgen
 	export PATH=${PATH}:${CLASSGEN_HOME}/bin
-	chmod 751 $DIR/classgen/bin/classgen
+	chmod 751 $DIR/src/classgen/bin/classgen
 	classgen -public -visitor -f $SRC/Tree/gen.cl
 	mv org/tree/*.java $SRC/Tree
 	javac -d $BUILD_DIR $SRC/Tree/*.java
