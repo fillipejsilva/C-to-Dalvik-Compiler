@@ -14,7 +14,7 @@ public class Interpretador extends VisitorAdaptor {
   public Scanner s = new Scanner(System.in);
   public HashMap <String, Programa> programas = new HashMap();
   
-  public void setTabela(SymTable tab){
+  public void setTabela( SymTable tab ){
     this.tabela = tab;
   }
 
