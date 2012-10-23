@@ -190,8 +190,20 @@ comandos ::= /*vazio*/ {: RESULT = new Comandos(); :}
 	     ;
 
 comando ::= PRINTF LPAREN STRING:str RPAREN PTVIRG {: RESULT = new Print(str); :}
-	    | PRINTF LPAREN STRING:str VIRG IDF:i RPAREN PTVIRG {: RESULT = new PrintId(str,new Idf(i)); :}
-	    | SCANF LPAREN STRING:str VIRG inList:inlst RPAREN PTVIRG {: RESULT = new Scan(str,inlst); :}
+	    | PRINTF LPAREN STRING:str VIRG IDF:i RPAREN PTVIRG {:
+	        PrintId comando = new PrintId(str, new Idf(i));
+	        comando.linha = strleft + 1;
+	        comando.coluna = strright + 1;
+	        comando.i.linha = comando.linha;
+	        comando.i.coluna = iright + 1;
+	        RESULT = comando;
+	      :}
+	    | SCANF LPAREN STRING:str VIRG inList:inlst RPAREN PTVIRG {:
+	        Scan comando = new Scan(str, inlst);
+	        comando.linha = strleft + 1;
+	        comando.coluna = strright + 1;
+	        RESULT = new Scan(str,inlst);
+	      :}
 	    | WHILE LPAREN expressao:exp RPAREN LCHAVE comandos:cmds RCHAVE {: RESULT = new ComandoWhile(exp,cmds); :}
 	    | IF LPAREN expressao:exp RPAREN LCHAVE comandos:cmds RCHAVE elsis:elss {: RESULT = new ComandoIf(exp,cmds,elss); :}
 	    | IDF:i ATRIB expressao:exp PTVIRG {: RESULT = new Atribuicao(new Idf(i),exp); :}
@@ -207,25 +219,100 @@ elsis ::= /*vazio*/ {:RESULT = new Elsis(); :}
 	  | ELSE LCHAVE comandos:cmds RCHAVE {: RESULT = new Elsis(cmds); :}
 	  ;
 
-expressao ::= expressao:exp1 EQ expressao:exp2 {: RESULT = new Igualdade(exp1,exp2); :}
-	      | expressao:exp1 SOMA expressao:exp2 {: RESULT = new Adicao(exp1,exp2); :} 
-	      | expressao:exp1 SUB expressao:exp2 {: RESULT = new Subtracao(exp1,exp2); :}
-	      | expressao:exp1 DIV expressao:exp2 {: RESULT = new Divisao(exp1,exp2); :}
-	      | expressao:exp1 MULT expressao:exp2 {: RESULT = new Multiplicacao(exp1,exp2); :}
-	      | expressao:exp1 MAIEQ expressao:exp2 {: RESULT = new MaiorIgual(exp1,exp2); :}
-	      | expressao:exp1 MENEQ expressao:exp2 {: RESULT = new MenorIgual(exp1,exp2); :}
-	      | expressao:exp1 MAIOR expressao:exp2 {: RESULT = new Maior(exp1,exp2); :}
-	      | expressao:exp1 MENOR expressao:exp2 {: RESULT = new Menor(exp1,exp2); :}
-	      | expressao:exp1 DIF expressao:exp2 {: RESULT = new Diferente(exp1,exp2); :}
-	      | expressao:exp1 E expressao:exp2 {: RESULT = new E(exp1,exp2); :}
-	      | expressao:exp1 OU expressao:exp2 {: RESULT = new Ou(exp1,exp2); :}
-	      | IDF:i LPAREN expressaoLista:explst RPAREN {: RESULT = new TermoFuncao(new Idf(i),explst); :}
-	      | IDF:i {: RESULT = new ExpId(new Idf(i)); :}
+expressao ::= expressao:exp1 EQ expressao:exp2 {:
+              Igualdade ex = new Igualdade(exp1,exp2);
+  	  	      ex.linha     = exp1left + 1;
+	          ex.coluna    = exp1right + 1;
+	          RESULT = ex;
+	        :}
+	      | expressao:exp1 SOMA expressao:exp2 {:
+  	  	      Adicao ex = new Adicao(exp1,exp2);
+  	  	      ex.linha     = exp1left + 1;
+	          ex.coluna    = exp1right + 1;
+	          RESULT = ex;
+	        :} 
+	      | expressao:exp1 SUB expressao:exp2 {:
+	          Subtracao ex = new Subtracao(exp1,exp2);
+  	  	      ex.linha     = exp1left + 1;
+	          ex.coluna    = exp1right + 1;
+	          RESULT = ex;
+	        :}
+	      | expressao:exp1 DIV expressao:exp2 {:
+	          Divisao ex =  new Divisao(exp1,exp2);
+	          ex.linha     = exp1left + 1;
+	          ex.coluna    = exp1right + 1;
+	          RESULT = ex;
+	        :}
+	      | expressao:exp1 MULT expressao:exp2 {:
+	          Multiplicacao ex = new Multiplicacao(exp1,exp2);
+	          ex.linha     = exp1left + 1;
+	          ex.coluna    = exp1right + 1;
+	          RESULT = ex;
+	        :}
+	      | expressao:exp1 MAIEQ expressao:exp2 {:
+	          MaiorIgual ex = new MaiorIgual(exp1,exp2);
+	          ex.linha     = exp1left + 1;
+	          ex.coluna    = exp1right + 1;
+	          RESULT = ex;
+	        :}
+	      | expressao:exp1 MENEQ expressao:exp2 {:
+	          MenorIgual ex = new MenorIgual(exp1,exp2);
+	          ex.linha     = exp1left + 1;
+	          ex.coluna    = exp1right + 1;
+	          RESULT = ex;
+	        :}
+	      | expressao:exp1 MAIOR expressao:exp2 {:
+	          Maior ex = new Maior(exp1,exp2);
+	          ex.linha     = exp1left + 1;
+	          ex.coluna    = exp1right + 1;
+	          RESULT = ex;
+	        :}
+	      | expressao:exp1 MENOR expressao:exp2 {:
+	          Menor ex = new Menor(exp1,exp2);
+	          ex.linha     = exp1left + 1;
+	          ex.coluna    = exp1right + 1;
+	          RESULT = ex;
+	        :}
+	      | expressao:exp1 DIF expressao:exp2 {:
+	          Diferente ex = new Diferente(exp1,exp2);
+	          ex.linha     = exp1left + 1;
+	          ex.coluna    = exp1right + 1;
+	          RESULT = ex;
+	        :}
+	      | expressao:exp1 E expressao:exp2 {:
+	          E ex = new E(exp1,exp2);
+	          ex.linha     = exp1left + 1;
+	          ex.coluna    = exp1right + 1;
+	          RESULT = ex;
+	        :}
+	      | expressao:exp1 OU expressao:exp2 {:
+	          Ou ex = new Ou(exp1,exp2);
+	          ex.linha     = exp1left + 1;
+	          ex.coluna    = exp1right + 1;
+	          RESULT = ex;
+	        :}
+	      | IDF:i LPAREN expressaoLista:explst RPAREN {:
+	          TermoFuncao ex = new TermoFuncao(new Idf(i),explst);
+	          ex.linha     = ileft + 1;
+	          ex.coluna    = iright + 1;
+	          RESULT = ex;
+	        :}
+	      | IDF:i {:
+	          ExpId ex = new ExpId(new Idf(i)); 
+	          ex.linha     = ileft + 1;
+	          ex.coluna    = iright + 1;
+	          RESULT = ex;
+	        :}
 	      | LPAREN expressao:exp RPAREN {: RESULT = new TermoParenteses(exp); :}
 	      | LCHAR:c {: RESULT = new ExpChar(c); :}
-        | LINT:it {: RESULT = new ExpInt(it); :}
-        | LFLOAT:fl {: RESULT = new ExpFloat(fl); :}
-	      | NEG expressao:exp {: RESULT = new TermoNegacao(exp); :}
+          | LINT:it {: RESULT = new ExpInt(it); :}
+          | LFLOAT:fl {: RESULT = new ExpFloat(fl); :}
+	      | NEG expressao:exp {:
+	      	  TermoNegacao ex = new TermoNegacao(exp);
+	      	  ex.linha = expleft + 1;
+	      	  ex.coluna = expright + 1;
+	          RESULT = ex;
+	        :}
 	      ;
 
 expressaoLista ::= /*vazio*/ {: RESULT = new ExpressaoLista(); :}
