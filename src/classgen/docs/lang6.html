@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<!DOCTYPE html
+PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>classgen</title>
+<link rel="stylesheet" type="text/css" href="style/cg_doc.css" />
+
+</head>
+<body>
+<table class="menu" width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td valign="bottom"><img src="dec_images/logo_cldocs.gif" width="296" height="52" alt="" /></td>
+<td>&nbsp;</td>
+<td align="right"><a href="http://www.tum.de"><img src="dec_images/logo_tum.jpg" width="72" height="86" alt="" /></a></td>
+</tr>
+<tr>
+<td class="underline"><img src="dec_images/blank.gif" width="1" height="1" alt="" /></td>
+<td><img src="dec_images/gradient1.gif" width="236" height="6" alt="" /></td>
+</tr>
+<tr>
+<td class="menubar">
+<!-- <a class="menu" href="../index.html">home</a> <span class="ublack">|</span> -->
+<a class="menu" href="index.html">toc</a> |
+<a class="menu" href="inst1.html">install</a> |
+<a class="menu" href="use1.html">usage</a> |
+<span class="underline">language</span> |
+<a class="menu" href="ex1.html">examples</a> |
+<a class="menu" href="ref1.html">ref</a> |
+<a class="menu" href="api/index.html">api</a>&nbsp;&nbsp;&nbsp;
+<a class="menu" href="lang5.html"><img src="dec_images/nav_left.gif" width="10" height="15" alt="" /></a>
+<a class="menu" href="lang1.html"><img src="dec_images/nav_top.gif" width="12" height="15" alt="" /></a>
+</td>
+<td><img src="dec_images/gradient_menu.gif" width="166" height="20" alt="" /></td>
+<td></td>
+</tr>
+</table>
+<h2 class="section">3.5 Visitor design pattern</h2>
+<p>After generation the Java classes can store their values but the don't have any functionality. To add functionality we can simply add methods and variables, but two problems arise. <br /><br /></p>
+<ol>
+<li>If we extend the classgen generated classes manually we must be absolutely sure that there will be no changes to the data type afterwards. If we do any changes and re-generate the classes all manual changes will be lost.</li>
+<li>After manually extending the classes we have to re-compile them. This can take a long time if we are working on big projects.</li>
+</ol>
+<p>You see it would be great if we could separate the functionality from the generated classes. And this is exactly what the "visitor pattern" does. We explain the usage of this mighty design pattern with a example. We define a recursive data type  list of <span class="code">int</span> values. A list can be empty or contain a head (an <span class="code">int</span>) and a tail (a list). classgen specification looks like this.</p>
+
+<div class="clexample"><table class="clexample">
+<tr><td>
+<pre class="clspec">
+List::={Cons} "int":head
+       List:tail
+       | {Empty}
+</pre>
+</td><td>
+<img src="doc_images/lang7.jpg" width="167" height="195" alt="" />
+</td></tr>
+</table></div>
+
+<p>We generate classes with the "visitor" option. classgen creates 6 Java files <span class="code">List.java, Cons.java, Empty.java, SyntaxNode.java, Visitor.java</span> and <span class="code">VisitorAdaptor.java</span>. <span class="code">List, Cons, Empty</span> look more or less like we know it from previous examples. The difference is that they all implement <span class="code">SyntaxNode</span> (directly or indirectly) and they have some additionally methods. The most important method is <span class="code">accept(Visitor visitor)</span>. Its function will be described in the following examples.<br /><br />
+
+The other 3 classes (or interfaces) have the following functions.</p>
+<ul>
+<li><span class="emph">SyntaxNode</span> This interface is implemented by all data type classes (the syntax nodes). It defines all important methods.</li>
+<li><span class="emph">Visitor</span> This interface defines the <span class="code">visit()</span> methods for the different data types. In our example it looks like that
+<pre class="javacode">
+public interface Visitor {
+
+  public void visit(List list);
+  public void visit(Cons cons);
+  public void visit(Empty empty);
+
+}
+</pre></li>
+<li><span class="emph">VisitorAdaptor</span> This class is a convenience class which implements <span class="code">Visitor</span>. With extending this class for our visitors we have the advantage of defining <span class="code">visit()</span> methods only for the nodes where we have to do something.</li>
+</ul>
+<p>Confused? We'll give detailed explanation with this step by step example. The <span class="code">list</span> data type can store a list of <span class="code">int</span> values. Suppose we want to sum all the elements of a list. Because we do not want to alter the classes itself we use a visitor. Therefore we extend <span class="code">VisitorAdaptor</span>.</p>
+<pre class="javacode">
+public class ListSum extends VisitorAdaptor{
+private int sum=0;              //this int holds the current value
+
+  public int getSum(){          //get() method for the value
+    return sum;
+  }
+
+  public void visit (Cons c){   //visit() method is defined in Visitor.java
+    sum+=c.getHead();           //add the head of a list to the current value
+    c.getTail().accept(this);   //"recursive" call to rest of the list
+  }
+}
+</pre>
+<p>Before explanation we first show usage of this visitor.</p>
+<pre class="javacode">
+public class Main{
+    
+  public static void main(String args[]){
+    
+    List l=new Cons(10, new                      //set up the example list
+      Cons(20, new Cons(30, new Empty())));      //"10, 20, 30" 
+    ListSum ls=new ListSum();                    //create our visitor
+    
+    l.accept(ls);                                //let our visitor visit
+                                                 //the list
+    System.out.println("Sum is: "+ls.getSum());  //print result
+  }
+}
+</pre>
+<p>As we expected we get the result "60". What happened? We start the visitor with <span class="code">l.accept(ls)</span>. The <span class="code">accept()</span> method is (abstractly) defined by <span class="code">List</span> without a method body. So we take a look at the <span class="code">accept()</span> method of <span class="code">Cons</span>.</p>
+<pre class="javacode">
+public void accept(Visitor visitor){
+  visitor.visit(this);
+}
+</pre>
+<p><span class="code">accept()</span> only calls the <span class="code">visit()</span> method of our visitor, which in turn adds the head value to its variable <span class="code">sum</span>. After adding the value it calls <span class="code">accept(ourVisitor)</span> for the rest of the list. Ok, but the at the end of our list is an instance of <span class="code">Empty</span>. Our visitor only defines <span class="code">visit(Cons c)</span>. We take a look at the super class of our visitor, <span class="code">VisitorAdaptor</span> and see it defines <span class="code">visit(Empty e)</span>. The method has a empty body and therefore does nothing. It adds nothing to our sum and does not call to a new method. The visiting stops at this point.<br /><br />
+
+We added functionality to our classes without extending themselves. As you'll see in the next example it's easy to write another visitor which produces a string concatenation of all values of a list. This visitor has another addition, it has a explicitly defined method <span class="code">visit(Empty e)</span> which produces a "E" to mark the end of the list.</p>
+<pre class="javacode">
+public class ListConcat extends VisitorAdaptor{
+  private String concat="";                //the string holds the current value
+  public String getConcat(){               //get() method for the string
+    return concat;
+  }
+  
+  public void visit (Cons c){             //visit() method is defined in Visitor.java
+    concat=concat+" "+                    //add the head of a list to the current string
+      String.valueOf(c.getHead())+" ";
+    c.getTail().accept(this);             //"recursive" call to rest of the list
+  
+  }
+  public void visit (Empty e){            //visit() for empty list
+    concat=concat+" E ";                  //add a "E"
+  }                                       //do not call further methods
+}
+</pre>
+<p>We now use both visitors.</p>
+<pre class="javacode">
+public class Main{
+    
+  public static void main(String args[]){
+    
+    List l=new Cons(10, new                      //set up the example list
+      Cons(20, new Cons(30, new Empty())));      //"10, 20, 30" 
+    ListSum ls=new ListSum();                    //create our sum-visitor
+    ListConcat lc =new ListConcat();             //create our concat-visitor
+    
+    l.accept(ls);                                //let our visitors visit
+    l.accept(lc);                                //the list
+    System.out.println("Sum is: "+ls.getSum());  //print result
+    System.out.println("Concatenation is: "+
+      lc.getConcat());
+  }
+}
+</pre>
+<p>We get the following result:</p>
+<pre class="javacode">
+Sum is: 60
+Concatenation is:  10  20  30  E  
+</pre>
+<p>In some cases (e.g. the concatenation visitor) the order in which the nodes are visited is important. classgen generates methods to visit the nodes in "top-down" or "bottom-up" manner. To use this methods we have to do a small change to our visitor. We don't have to call other <span class="code">accept()</span> methods. The methods  <span class="code">traverseTopDown()</span> and  <span class="code">traverseBottomUp()</span> do this for us.</p>
+<pre class="javacode">
+public class ListConcat extends VisitorAdaptor{
+  private String concat="";                //the string holds the current value
+  public String getConcat(){               //get() method for the string
+    return concat;
+  }
+  
+  public void visit (Cons c){             //visit() method is defined in Visitor.java
+    concat=concat+" "+                    //add the head of a list to the current string
+      String.valueOf(c.getHead())+" ";    //NO call to other accept() methods
+  }
+  
+  public void visit (Empty e){            //visit() for empty list
+    concat=concat+" E ";                  //add a "E"
+  }                                       //do not call further methods
+}
+</pre>
+<p>You can see the difference between top-down and bottom-up traversing in the example.</p>
+<pre class="javacode">
+public class Main{
+    
+  public static void main(String args[])
+  {
+    List l=new Cons(10, new Cons(20, new Cons(30, new Empty())));
+    
+    ListConcat lc= new ListConcat();
+    l.traverseTopDown(lc);
+    System.out.println("Concatenation 1 is: "+lc.getConcat());
+    
+    lc = new ListConcat();
+    l.traverseBottomUp(lc);
+    System.out.println("Concatenation 2 is: "+lc.getConcat());
+  }
+}
+</pre>
+<p>We have to create a new visitor for the second traverse since our visitor has no method to reset its variable which holds the result. Running the program produces:</p>
+<pre class="javacode">
+Concatenation 1 is:  10  20  30  E  
+Concatenation 2 is:  E  30  20  10  
+</pre>
+<p>These small examples should have shown the usage and might of the "visitor pattern". For further information refer to <a href="ref1.html">[1]</a>.</p>
+
+<!-- footer -->
+<hr class="footer" />
+<p class="copy">
+&copy; copyright 2000, 2001, 2002 Sebastian Winter (<a href="mailto:winterse@in.tum.de">winterse@in.tum.de</a>) and Florian Deissenboeck (<a href="mailto:flo@deissenboeck.de">flo@deissenboeck.de</a>)  
+<br /><br />  
+&copy; copyright 2000, 2001, 2002 Technical University of Munich, Germany
+</p>
+<p class="center">
+<a href="http://validator.w3.org/check/referer"><img src="dec_images/valid-xhtml10.gif" width="88" height="31" alt="" /></a>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://jigsaw.w3.org/css-validator/"><img src="dec_images/valid_css20.gif" width="88" height="31" alt="" /></a>
+</p>
+</body>
+</html>

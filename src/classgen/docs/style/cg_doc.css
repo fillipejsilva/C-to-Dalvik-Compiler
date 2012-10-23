@@ -1,0 +1,199 @@
+body {
+	background-color : White;
+	font-family :  Verdana, Geneva, Arial, Helvetica, sans-serif;
+	color : Black;
+}
+
+h1{
+	color : #6165F9;
+	text-align : center;
+}
+
+h1.left {
+	text-align : left;
+}
+
+h2{
+	color : #6165F9;
+}
+
+h2.section{
+	text-align : left;
+}
+
+h3{
+	color : #6165F9;
+}
+A  {
+	color : #6165F9;
+	text-decoration : none;
+}
+
+A:Visited  {
+	text-decoration : none;
+}
+
+A:Active  {
+	text-decoration : none;
+}
+
+A:Hover  {
+	text-decoration : underline;
+}
+
+span.code{
+	font-family : monospace;
+	font-size : larger;
+}
+
+span.emph{
+	font-style : italic;
+}
+
+span.ublack{
+	font-weight : 900;
+}
+
+span.bold{
+	font-weight : bold;
+}
+
+span.underline{
+	text-decoration : underline;
+}
+
+pre.javacode  {
+	font-family : monospace;
+	color : #008080;
+	border-left-width : thin;
+	border-color : #008080;
+	border-style : solid;
+	padding-left : 5pt;
+	border-right-width : 0pt;
+	border-top-width : 0pt;
+	border-bottom-width : 0pt;
+	white-space : pre;
+}
+
+pre.console  {
+	font-family : monospace;
+	color : #6165F9;
+	border-left-width : thin;
+	border-color : #6165F9;
+	border-style : solid;
+	padding-left : 5pt;
+	border-right-width : 0pt;
+	border-top-width : 0pt;
+	border-bottom-width : 0pt;
+	white-space : pre;
+}
+
+pre.clspec  {
+	font-family : monospace;
+	color : #6165F9;
+	border-left-width : thin;
+	border-color : #6165F9;
+	border-style : solid;
+	padding-left : 5pt;
+	border-right-width : 0pt;
+	border-top-width : 0pt;
+	border-bottom-width : 0pt;
+	white-space : pre;
+}
+
+
+div.clexample{
+	text-align : center;
+	margin-bottom : 20px;
+	margin-top : 20px;
+}
+
+p{
+	
+}
+
+p.center{
+	text-align : center;
+}
+
+p.copy{
+	font-size : x-small;
+	text-align : center;
+	margin-top : 2px;
+}
+
+table{
+	border : 0px;
+}
+
+table.clexample{
+	
+}
+
+table.menu{
+	margin-bottom : 15px;
+}
+
+tr{
+	vertical-align : top;
+}
+
+td.underline{
+	background-color : #6165F9;
+	width : 100%;
+}
+
+td.menubar{
+	background-color : Silver;
+	width : 100%;
+}
+
+hr.footer{
+	color : #6165F9;
+	margin-top : 10px;
+	margin-bottom : 0px;
+}
+
+a  {
+	color : #6165F9;
+	text-decoration : none;
+}
+
+a:visited  {
+	text-decoration : none;
+}
+
+a:active  {
+	text-decoration : none;
+}
+
+a:hover  {
+	text-decoration : underline;
+}
+
+a.menu  {
+	color : black;
+	text-decoration : none;
+}
+
+a.menu:hover  {
+	color : #6165F9;
+	text-decoration : none;
+}
+
+img {
+	border : 0px;
+}
+
+div.doctoc{
+	text-align : center;
+}
+
+
+li{
+	margin-top : 5px;
+}
+li.appendix{
+	list-style-type : upper-alpha;
+	
+}
