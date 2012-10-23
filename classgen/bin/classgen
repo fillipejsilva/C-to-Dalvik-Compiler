@@ -1,0 +1,16 @@
+#! /bin/sh
+
+if [ -z "$CLASSGEN_HOME" ] ; then
+  echo "CLASSGEN_HOME is not set. Please set CLASSGEN_HOME."
+  exit
+fi
+
+if [ -z "$JAVA_HOME" ] ; then
+  echo "JAVA_HOME is not set. Please set JAVA_HOME."
+  exit
+fi
+
+JAVACMD=$JAVA_HOME/bin/java
+LOCALCLASSPATH=$CLASSGEN_HOME/lib/classgen.jar:$CLASSGEN_HOME/lib/java-cup-10k-b2-runtime.jar
+
+$JAVACMD -classpath "$LOCALCLASSPATH" classgen.Main "$@"
