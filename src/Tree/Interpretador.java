@@ -189,14 +189,31 @@ public class Interpretador extends VisitorAdaptor {
 	    	currFuncao.getVariavel(varId).valor = new ArrayList<String>();
     	}
     }
+
+    int tam = ( (ArrayList<Integer>) currFuncao.getVariavel(varId).valor ).size()-1;
     
    	if( currFuncao.getVariavel(varId).tpo instanceof IntTipo ){
+   		if( indice > tam){
+   			for(int i = 0 ; i <= indice ; i++){
+   				(	(ArrayList<Integer>) currFuncao.getVariavel(varId).valor ).add(i, null);
+   			}
+   		}
 	    (	(ArrayList<Integer>) currFuncao.getVariavel(varId).valor ).add(indice, (Integer) vetorAtrib.exp2.val);
    	}
    	else if( currFuncao.getVariavel(varId).tpo instanceof FloatTipo ){
+   		if( indice > tam){
+   			for(int  i = 0 ; i <= indice ; i++){
+   				(	(ArrayList<Float>) currFuncao.getVariavel(varId).valor ).add(i, null);
+   			}
+   		}
 	    (	(ArrayList<Float>) currFuncao.getVariavel(varId).valor ).add(indice, (Float) vetorAtrib.exp2.val);
    	}
    	else if( currFuncao.getVariavel(varId).tpo instanceof CharTipo ){
+	    if( indice > tam){
+   			for(int	 i = 0 ; i <= indice ; i++){
+   				(	(ArrayList<String>) currFuncao.getVariavel(varId).valor ).add(i, null);
+   			}
+   		}
 	    (	(ArrayList<String>) currFuncao.getVariavel(varId).valor ).add(indice, (String) vetorAtrib.exp2.val);
     }    
     
@@ -381,7 +398,6 @@ public class Interpretador extends VisitorAdaptor {
   
   @Override
   public void visit(ExpId expId) {
-
       if( currFuncao.getVariavel(expId.i.s).tpo instanceof IntTipo){
 				expId.val = new Integer ( ( (Integer) currFuncao.getVariavel(expId.i.s).valor).intValue() );
       }
@@ -391,6 +407,24 @@ public class Interpretador extends VisitorAdaptor {
       else if( currFuncao.getVariavel(expId.i.s).tpo instanceof CharTipo ){
 				expId.val = new String ( (String) currFuncao.getVariavel(expId.i.s).valor );      
       }
+  }
+  
+  @Override
+  public void visit(UsoVetor usoVetor) {
+  		
+  		usoVetor.exp.accept(this);
+  		int indice = (Integer) usoVetor.exp.val;
+  		
+      if( currFuncao.getVariavel(usoVetor.i.s).tpo instanceof IntTipo){
+				usoVetor.val = new Integer ( (Integer) (	(ArrayList<Integer>) currFuncao.getVariavel(usoVetor.i.s).valor ).get(indice).intValue() );
+      }
+      else if( currFuncao.getVariavel(usoVetor.i.s).tpo instanceof FloatTipo ){
+				usoVetor.val = new Float ( (Float) (	(ArrayList<Float>) currFuncao.getVariavel(usoVetor.i.s).valor ).get(indice).floatValue() );      
+      }
+      else if( currFuncao.getVariavel(usoVetor.i.s).tpo instanceof CharTipo ){
+				usoVetor.val = new String ( (String) (	(ArrayList<String>) currFuncao.getVariavel(usoVetor.i.s).valor ).get(indice) );
+      }
+      
   }
   
   @Override

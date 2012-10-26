@@ -54,8 +54,8 @@ inList ::= 	idf:i
 elsis ::=	comandos*
 
 expressao ::= 
-			{Igualdade}       expressao:exp1 expressao:exp2
-          | {Adicao}          expressao:exp1 expressao:exp2
+					{Igualdade}       expressao:exp1 expressao:exp2
+        | {Adicao}          expressao:exp1 expressao:exp2
 	      | {Subtracao}       expressao:exp1 expressao:exp2
 	      | {Divisao}         expressao:exp1 expressao:exp2
 	      | {Multiplicacao}   expressao:exp1 expressao:exp2
@@ -71,9 +71,10 @@ expressao ::=
 	      | {TermoParenteses} expressao:exp
 	      | {TermoNegacao}    expressao:exp
 	      | {ExpChar}         "String":c
-          | {ExpInt}          "Integer":it
-          | {ExpFloat}        "Float":fl
-
+        | {ExpInt}          "Integer":it
+        | {ExpFloat}        "Float":fl
+				| {UsoVetor}				idf:i expressao:exp
+				
 expressaoLista ::= expressao*
 
 idf ::= "String":s

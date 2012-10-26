@@ -4,12 +4,12 @@
  */
 package org.tree;
 
-public class Atribuicao extends Comando {
+public class UsoVetor extends Expressao {
 
   public Idf i;
   public Expressao exp;
 
-  public Atribuicao (Idf i, Expressao exp) {
+  public UsoVetor (Idf i, Expressao exp) {
     this.i = i;
     if (i != null) i.setParent(this);
     this.exp = exp;
@@ -40,7 +40,7 @@ public class Atribuicao extends Comando {
   public String toString(String tab) {
     StringBuffer buffer = new StringBuffer();
     buffer.append(tab);
-    buffer.append("Atribuicao(\n");
+    buffer.append("UsoVetor(\n");
       if (i != null)
         buffer.append(i.toString("  "+tab));
       else
@@ -52,7 +52,7 @@ public class Atribuicao extends Comando {
         buffer.append(tab+"  null");
     buffer.append("\n");
     buffer.append(tab);
-    buffer.append(") [Atribuicao]");
+    buffer.append(") [UsoVetor]");
     return buffer.toString();
   }
 }
