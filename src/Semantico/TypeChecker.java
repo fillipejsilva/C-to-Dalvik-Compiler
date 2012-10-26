@@ -405,7 +405,7 @@ public class TypeChecker extends VisitorAdaptor{
     }
     try{
       //Caso exista um numero insuficiente de parametros para a funcao chamada o try se faz necessario
-      if( CalledFunc.params.isEmpty() ){
+      if( CalledFunc.params.isEmpty() && termoFuncao.explst.size() > 0){
       	throw new ArrayIndexOutOfBoundsException();
       }
       for (String key: CalledFunc.params.keySet())
@@ -817,7 +817,7 @@ public class TypeChecker extends VisitorAdaptor{
     }
     try{
       //Caso exista um numero insuficiente de parametros para a funcao chamada o try se faz necessario
-      if( CalledFunc.params.isEmpty() ){
+      if( CalledFunc.params.isEmpty() && chamadaFuncao.explst.size() > 0){
       	throw new ArrayIndexOutOfBoundsException();
       }
       for (String key: CalledFunc.params.keySet())
