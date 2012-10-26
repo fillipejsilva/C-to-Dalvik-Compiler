@@ -849,7 +849,8 @@ public class TypeChecker extends VisitorAdaptor{
              currFuncao.tipo instanceof FloatTipo && tpo instanceof FloatTipo ||
              currFuncao.tipo instanceof CharTipo && tpo instanceof CharTipo ||
              currFuncao.tipo instanceof VoidTipo && tpo == null )) {
-        System.out.println("\nErro: Retorno da funcao '"+ currFuncao.id + "' diferente do tipo declarado.");
+        System.out.println("\n[l" + funcao.prgm.exp.linha + "|c" + funcao.prgm.exp.coluna +"]:" +
+          " Erro: Retorno da funcao '"+ currFuncao.id + "' diferente do tipo declarado.");
         System.exit(1);
        }
   }
