@@ -2,3 +2,7 @@ Jdc/
 org/
 *~
 src/Tree/*.java
+
+src/Lexer/Lexico.java
+src/Parser/parser.java
+src/Parser/sym.java
