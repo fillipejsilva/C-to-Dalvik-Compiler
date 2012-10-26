@@ -28,6 +28,7 @@ int main() {
   }
  */
  
-  printf("asdasdsa: %c", x);
+  /*printf("asdasdsa: %c", x);*/
+  scanf("%c", &x);
   return 1;
 }

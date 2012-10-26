@@ -202,7 +202,7 @@ comando ::= PRINTF LPAREN STRING:str RPAREN PTVIRG {: RESULT = new Print(str); :
 	        Scan comando = new Scan(str, inlst);
 	        comando.linha = strleft + 1;
 	        comando.coluna = strright + 1;
-	        RESULT = new Scan(str,inlst);
+	        RESULT = comando;
 	      :}
 	    | WHILE LPAREN expressao:exp RPAREN LCHAVE comandos:cmds RCHAVE {: RESULT = new ComandoWhile(exp,cmds); :}
 	    | IF LPAREN expressao:exp RPAREN LCHAVE comandos:cmds RCHAVE elsis:elss {: RESULT = new ComandoIf(exp,cmds,elss); :}

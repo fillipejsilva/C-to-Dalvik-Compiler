@@ -620,12 +620,14 @@ public class TypeChecker extends VisitorAdaptor{
           count++;
 
           if(count > 1){ //verificando se ocorre mais que uma vez
-            System.out.println("\nSomente é permitido ler uma variável de cada vez!");
+            System.out.println("\n[l" + scan.linha + "|c" + scan.coluna +"]:" +
+              " Somente é permitido ler uma variável de cada vez!");
             System.exit(1);
           }     
 
           if(!tabela.compareTypes(new IntTipo(),currFuncao.params.get(scan.inlst.i.s).tpo)){ //verificando se é Inteiro
-            System.out.println("\nNão é permitido ler um tipo diferente do que foi fornecido como parâmetro.");
+            System.out.println("\n[l" + scan.linha + "|c" + scan.coluna +"]:" +
+              " Não é permitido ler um tipo diferente do que foi fornecido como parâmetro.");
             System.exit(1);
           }               
 
@@ -634,12 +636,14 @@ public class TypeChecker extends VisitorAdaptor{
           count++;
 
           if(count > 1){ //verificando se ocorre mais que uma vez
-            System.out.println("\nSomente é permitido ler uma variável de cada vez!");
+            System.out.println("\n[l" + scan.linha + "|c" + scan.coluna +"]:" +
+              " Somente é permitido ler uma variável de cada vez!");
             System.exit(1);
           }
 
           if(!tabela.compareTypes(new CharTipo(),currFuncao.params.get(scan.inlst.i.s).tpo)){ //verificando se é Char
-            System.out.println("\nNão é permitido ler um tipo diferente do que foi fornecido como parâmetro.");
+            System.out.println("\n[l" + scan.linha + "|c" + scan.coluna +"]:" +
+              " Não é permitido ler um tipo diferente do que foi fornecido como parâmetro.");
             System.exit(1);
           }
 
@@ -648,12 +652,14 @@ public class TypeChecker extends VisitorAdaptor{
           count++;
 
           if(count > 1){ //verificando se ocorre mais que uma vez
-            System.out.println("\nSomente é permitido ler uma variável de cada vez!");
+            System.out.println("\n[l" + scan.linha + "|c" + scan.coluna +"]:" +
+              " Somente é permitido ler uma variável de cada vez!");
             System.exit(1);
           }
 
           if(!tabela.compareTypes(new FloatTipo(),currFuncao.params.get(scan.inlst.i.s).tpo)){ //verificando se é Float
-            System.out.println("\nNão é permitido ler um tipo diferente do que foi fornecido como parâmetro.");
+            System.out.println("\n[l" + scan.linha + "|c" + scan.coluna +"]:" +
+              " Não é permitido ler um tipo diferente do que foi fornecido como parâmetro.");
             System.exit(1);
           }
 
@@ -671,12 +677,14 @@ public class TypeChecker extends VisitorAdaptor{
           count++;
 
           if(count > 1){ //verificando se ocorre mais que uma vez
-            System.out.println("\nSomente é permitido ler uma variável de cada vez!");
+            System.out.println("\n[l" + scan.linha + "|c" + scan.coluna +"]:" +
+              " Somente é permitido ler uma variável de cada vez!");
             System.exit(1);
           }     
 
           if(!tabela.compareTypes(new IntTipo(),currFuncao.locais.get(scan.inlst.i.s).tpo)){ //verificando se é Inteiro
-            System.out.println("\nNão é permitido ler um tipo diferente do que foi fornecido como parâmetro.");
+            System.out.println("\n[l" + scan.linha + "|c" + scan.coluna +"]:" +
+              " Não é permitido ler um tipo diferente do que foi fornecido como parâmetro.");
             System.exit(1);
           }               
 
@@ -685,12 +693,14 @@ public class TypeChecker extends VisitorAdaptor{
           count++;
 
           if(count > 1){ //verificando se ocorre mais que uma vez
-            System.out.println("\nSomente é ler imprimir uma variável de cada vez!");
+            System.out.println("\n[l" + scan.linha + "|c" + scan.coluna +"]:" +
+              " Somente é ler imprimir uma variável de cada vez!");
             System.exit(1);
           }
 
           if(!tabela.compareTypes(new CharTipo(),currFuncao.locais.get(scan.inlst.i.s).tpo)){ //verificando se é Char
-            System.out.println("\nNão é permitido ler um tipo diferente do que foi fornecido como parâmetro.");
+            System.out.println("\n[l" + scan.linha + "|c" + scan.coluna +"]:" +
+              " Não é permitido ler um tipo diferente do que foi fornecido como parâmetro.");
             System.exit(1);
           }
 
@@ -699,12 +709,14 @@ public class TypeChecker extends VisitorAdaptor{
           count++;
 
           if(count > 1){ //verificando se ocorre mais que uma vez
-            System.out.println("\nSomente é permitido ler uma variável de cada vez!");
+            System.out.println("\n[l" + scan.linha + "|c" + scan.coluna +"]:" +
+              " Somente é permitido ler uma variável de cada vez!");
             System.exit(1);
           }
 
           if(!tabela.compareTypes(new FloatTipo(),currFuncao.locais.get(scan.inlst.i.s).tpo)){ //verificando se é Float
-            System.out.println("\nNão é permitido ler um tipo diferente do que foi fornecido como parâmetro.");
+            System.out.println("\n[l" + scan.linha + "|c" + scan.coluna +"]:" +
+              " Não é permitido ler um tipo diferente do que foi fornecido como parâmetro.");
             System.exit(1);
           }
 
@@ -712,7 +724,8 @@ public class TypeChecker extends VisitorAdaptor{
       }
     }
     else {
-      System.out.println("\nVariável não declarada no escopo\n");
+      System.out.println("\n[l" + scan.linha + "|c" + scan.coluna +"]:" +
+        " Variável não declarada no escopo\n");
       System.exit(1);
     }
   
