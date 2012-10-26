@@ -740,18 +740,21 @@ public class TypeChecker extends VisitorAdaptor{
     //Procura a variável sendo atribuida entre os parâmetros e locais e realiza a verificação de tipos    
     if(currFuncao.params.containsKey(atribuicao.i.s)) {
       if(!tabela.compareTypes(atribuicao.exp.tpo,currFuncao.params.get(atribuicao.i.s).tpo)) {
-        System.out.println("\nTipo de expressão não condiz com o identificador "+atribuicao.i.s+"\n");
+        System.out.println("\n[l" + atribuicao.linha + "|c" + atribuicao.coluna +"]:" +
+          " Tipo de expressão não condiz com o identificador "+atribuicao.i.s+"\n");
         System.exit(1);
       }
     }
     else if(currFuncao.locais.containsKey(atribuicao.i.s)) {
       if(!tabela.compareTypes(atribuicao.exp.tpo,currFuncao.locais.get(atribuicao.i.s).tpo)) {
-        System.out.println("\nTipo de expressão não condiz com o identificador"+atribuicao.i.s+"\n");
+        System.out.println("\n[l" + atribuicao.linha + "|c" + atribuicao.coluna +"]:" +
+          " Tipo de expressão não condiz com o identificador "+atribuicao.i.s+"\n");
         System.exit(1);
       } 
     }
     else {
-      System.out.println("\nVariável "+atribuicao.i.s+" não declarada no escopo\n");
+      System.out.println("\n[l" + atribuicao.linha + "|c" + atribuicao.coluna +"]:" +
+        " Variável "+atribuicao.i.s+" não declarada no escopo\n");
       System.exit(1);
     }
   }
@@ -765,33 +768,39 @@ public class TypeChecker extends VisitorAdaptor{
     
     //Procura a variável sendo atribuida entre os parâmetros e locais e realiza a verificação de tipos
     if(! (vetorAtrib.exp1.tpo instanceof IntTipo)) {
-      System.out.println("\nSomente valores inteiros podem ser indice de um vetor\n");
+      System.out.println("\n[l" + vetorAtrib.linha + "|c" + vetorAtrib.coluna +"]:" +
+        " Somente valores inteiros podem ser indice de um vetor\n");
       System.exit(1);
     }
     else if(currFuncao.params.containsKey(vetorAtrib.i.s)) {
       StVariavel var = currFuncao.params.get(vetorAtrib.i.s);
       if(var.tam <= 0){
-        System.out.println("\nTal identificador não é um vetor "+vetorAtrib.i.s+"\n");
+        System.out.println("\n[l" + vetorAtrib.linha + "|c" + vetorAtrib.coluna +"]:" +
+          " Tal identificador não é um vetor "+vetorAtrib.i.s+"\n");
         System.exit(1);
       }
       else if(!tabela.compareTypes(vetorAtrib.exp2.tpo,currFuncao.params.get(vetorAtrib.i.s).tpo)) {
-        System.out.println("\nTipo de expressão não condiz com o identificador "+vetorAtrib.i.s+"\n");
+        System.out.println("\n[l" + vetorAtrib.linha + "|c" + vetorAtrib.coluna +"]:" +
+          " Tipo de expressão não condiz com o identificador "+vetorAtrib.i.s+"\n");
         System.exit(1);
       }
     }
     else if(currFuncao.locais.containsKey(vetorAtrib.i.s)) {
       StVariavel var = currFuncao.locais.get(vetorAtrib.i.s);
       if(var.tam <= 0){
-        System.out.println("\nTal identificador não é um vetor "+vetorAtrib.i.s+"\n");
+        System.out.println("\n[l" + vetorAtrib.linha + "|c" + vetorAtrib.coluna +"]:" +
+          " Tal identificador não é um vetor "+vetorAtrib.i.s+"\n");
         System.exit(1);
       }
       if(!tabela.compareTypes(vetorAtrib.exp2.tpo,currFuncao.locais.get(vetorAtrib.i.s).tpo)) {
-        System.out.println("\nTipo de expressão não condiz com o identificador "+vetorAtrib.i.s+"\n");
+        System.out.println("\n[l" + vetorAtrib.linha + "|c" + vetorAtrib.coluna +"]:" +
+          " Tipo de expressão não condiz com o identificador "+vetorAtrib.i.s+"\n");
         System.exit(1);
       } 
     }
     else {
-      System.out.println("\nVariável "+vetorAtrib.i.s+" não declarada no escopo\n");
+      System.out.println("\n[l" + vetorAtrib.linha + "|c" + vetorAtrib.coluna +"]:" +
+        " Variável "+vetorAtrib.i.s+" não declarada no escopo\n");
       System.exit(1);
     }
   }
@@ -812,14 +821,16 @@ public class TypeChecker extends VisitorAdaptor{
       for (String key: CalledFunc.params.keySet())
       {
         if(!tabela.compareTypes( CalledFunc.params.get(key).tpo, chamadaFuncao.explst.elementAt(i).tpo )){
-          System.out.println("\nChamada da função "+chamadaFuncao.i.s+" com expressões de tipo(s) diferente(s) do(s) requisitado(s)\n");
+          System.out.println("\n[l" + chamadaFuncao.linha + "|c" + chamadaFuncao.coluna +"]:" +
+            " Chamada da função "+chamadaFuncao.i.s+" com expressões de tipo(s) diferente(s) do(s) requisitado(s)\n");
           System.exit(1);
         }
         i++;
       }
       
     }catch(ArrayIndexOutOfBoundsException err){
-      System.out.println("\nNumero de argumentos da funcao "+chamadaFuncao.i.s+" incompativel!\n");
+      System.out.println("\n[l" + chamadaFuncao.linha + "|c" + chamadaFuncao.coluna +"]:" +
+        " Numero de argumentos da funcao "+chamadaFuncao.i.s+" incompativel!\n");
       System.exit(1);
     }
   }

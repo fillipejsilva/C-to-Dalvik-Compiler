@@ -381,6 +381,9 @@ public class Interpretador extends VisitorAdaptor {
   
   @Override
   public void visit(ExpId expId) {
+
+    System.out.println("-->cuurFuncao: " + currFuncao.id);
+
       if( currFuncao.getVariavel(expId.i.s).tpo instanceof IntTipo){
 				expId.val = new Integer ( ( (Integer) currFuncao.getVariavel(expId.i.s).valor).intValue() );
       }
