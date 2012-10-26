@@ -864,7 +864,8 @@ public class TypeChecker extends VisitorAdaptor{
     //Checa o tipo de retorno da função principal, que deve ser sempre inteiro
     if(!(funcaoPrincipal.prgm.exp.tpo instanceof IntTipo 
        || funcaoPrincipal.prgm.exp instanceof ExpInt)) {
-      System.out.println("\nErro: Retorno da main deve ser do tipo int.");
+      System.out.println("\n[l" + funcaoPrincipal.prgm.exp.linha + "|c" + funcaoPrincipal.prgm.exp.coluna +"]:" +
+        " Erro: Retorno da main deve ser do tipo int.");
       System.exit(1);
     }
   }
