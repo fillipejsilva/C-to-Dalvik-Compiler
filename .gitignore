@@ -1,6 +1,7 @@
 Jdc/
 org/
 *~
+
 src/Tree/*.java
 
 src/Lexer/Lexico.java
