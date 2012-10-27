@@ -838,6 +838,9 @@ public class TypeChecker extends VisitorAdaptor{
     }
     try{
       //Caso exista um numero insuficiente de parametros para a funcao chamada o try se faz necessario
+      if( CalledFunc.params.isEmpty() && chamadaFuncao.explst.size() > 0) {
+        throw new ArrayIndexOutOfBoundsException();
+      }
       for (String key: CalledFunc.params.keySet())
       {
         if(!tabela.compareTypes( CalledFunc.params.get(key).tpo, chamadaFuncao.explst.elementAt(i).tpo )){
