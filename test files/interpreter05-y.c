@@ -53,5 +53,5 @@ int main() {
    */
   inteiro = _2mais2(inteiro);
 
-  return 1;
+  return w;
 }
