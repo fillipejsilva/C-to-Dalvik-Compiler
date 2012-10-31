@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+/*int _2mais2(int x, float x) { Parametros de mesmo nome encontrados*/
 int _2mais2() {
   return 2 + 2;
 }
 int main() {
   char w;
   float x;
+  /*float x; redeclaracao de variáveis no mesmo escopo*/
   char z;
   void oi;
   int inteiro;
@@ -53,5 +55,7 @@ int main() {
    */
   inteiro = _2mais2(inteiro);
 
-  return w;
+  /* return w; Retorno da main deve ser do tipo int.*/
+  
+  return 0;
 }

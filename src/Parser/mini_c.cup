@@ -145,7 +145,12 @@ funcaoBloco ::=	/*vazio*/ {: RESULT = new FuncaoBloco(); :}
 		| funcaoBloco:fncb funcao:fnc {: RESULT = fncb.append(fnc); :}
 		;
 
-funcao ::= tipo:tpo IDF:i LPAREN entradaFuncao:etrdfnc RPAREN LCHAVE programa:prgm RCHAVE {: RESULT = new Funcao(tpo,new Idf(i),etrdfnc,prgm); :}
+funcao ::= tipo:tpo IDF:i LPAREN entradaFuncao:etrdfnc RPAREN LCHAVE programa:prgm RCHAVE {:
+		     Idf idf = new Idf(i);
+		     idf.linha = ileft + 1;
+		     idf.coluna = iright + 1;
+		     RESULT = new Funcao(tpo,idf,etrdfnc,prgm);
+		   :}
 	   ;
 
 funcaoPrincipal ::= MAIN LPAREN RPAREN LCHAVE programa:prgm RCHAVE {: RESULT = new FuncaoPrincipal(prgm); :}
@@ -165,7 +170,12 @@ restoEntrada ::= /*vazio*/ {: RESULT = new EntradaFuncao(); :}
 		 | restoEntrada:retrd entrada:e VIRG {: RESULT = retrd.append(e); :}
 		 ;
 
-entrada ::= tipo:tpo IDF:i {: RESULT = new Entrada(tpo,new Idf(i)); :}
+entrada ::= tipo:tpo IDF:i {:
+			Idf idf = new Idf(i);
+			idf.linha = ileft + 1;
+			idf.coluna = iright +1;
+			RESULT = new Entrada(tpo,idf);
+		:}
 	    ;
 
 programa ::= declaraLista:declst comandos:cmds ret:r expressao:exp PTVIRG {: RESULT = new Programa(declst,cmds,r,exp); :}
@@ -178,7 +188,12 @@ declaraLista ::= /*vazio*/ {: RESULT = new DeclaraLista(); :}
 		 | declaraLista:dclst declara:dcl {: RESULT = dclst.append(dcl);  :}
 		 ;
 
-declara ::= tipo:tpo IDF:i vetor:vt PTVIRG {: RESULT = new Declara(tpo,vt,new Idf(i)); :}
+declara ::= tipo:tpo IDF:i vetor:vt PTVIRG {:
+			  Idf idf = new Idf(i);
+			  idf.linha = ileft + 1;
+			  idf.coluna = iright + 1;
+			  RESULT = new Declara(tpo,vt,idf);
+		    :}
 	    ;
 
 vetor ::= /*vazio*/ {: RESULT = new Vetor(0);:}

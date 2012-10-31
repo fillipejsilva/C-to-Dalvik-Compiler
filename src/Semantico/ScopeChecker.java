@@ -26,7 +26,8 @@ public class ScopeChecker extends VisitorAdaptor {
            entradaLista.elementAt(i).i.s
           ,new StVariavel(entradaLista.elementAt(i)));
       } else {
-        System.out.println("Erro: Parametros de mesmo nome encontrados.");
+        System.out.println("\n[l" + entradaLista.elementAt(i).i.linha + "|c" + entradaLista.elementAt(i).i.coluna +"]:" +
+          " Erro: Parametros de mesmo nome encontrados.");
         System.exit(1);
       }  
     }
@@ -41,7 +42,8 @@ public class ScopeChecker extends VisitorAdaptor {
            declaraLista.elementAt(i).i.s
           ,new StVariavel(declaraLista.elementAt(i)));
       } else {
-        System.out.println("Erro: Redeclaração de variáveis no mesmo escopo. ("
+        System.out.println("\n[l" + declaraLista.elementAt(i).i.linha + "|c" + declaraLista.elementAt(i).i.coluna +"]:" +
+          " Erro: Redeclaração de variáveis no mesmo escopo. ("
           +declaraLista.elementAt(i).i.s+")");
         System.exit(1);
       }
@@ -50,7 +52,8 @@ public class ScopeChecker extends VisitorAdaptor {
     if(!tabelaDeSimbolos.funcoes.containsKey(func.id)) {
       tabelaDeSimbolos.funcoes.put(func.id, func);
     } else {
-      System.out.println("Erro: Redeclaração de função.");
+      System.out.println("\n[l" + funcao.i.linha + "|c" + funcao.i.coluna +"]:" +
+        " Erro: Redeclaração de função.");
       System.exit(1);
     }
   }
@@ -72,7 +75,8 @@ public class ScopeChecker extends VisitorAdaptor {
            declaraLista.elementAt(i).i.s
           ,new StVariavel(declaraLista.elementAt(i)));
       } else {
-        System.out.println("Erro: Redeclaração de variáveis no mesmo escopo. ("
+        System.out.println("\n[l" + declaraLista.elementAt(i).i.linha + "|c" + declaraLista.elementAt(i).i.coluna +"]:" +
+          " Erro: Redeclaração de variáveis no mesmo escopo. ("
           +declaraLista.elementAt(i).i.s+")");
         System.exit(1);
       }
@@ -81,6 +85,7 @@ public class ScopeChecker extends VisitorAdaptor {
     if(!tabelaDeSimbolos.funcoes.containsKey(func.id)) {
       tabelaDeSimbolos.funcoes.put(func.id, func);
     } else {
+      //sem linha e coluna porque a redclaração da main é um erro sintático
       System.out.println("Erro: Redeclaração de função.");
       System.exit(1);
     }
