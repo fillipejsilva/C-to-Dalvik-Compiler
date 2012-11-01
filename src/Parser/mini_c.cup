@@ -204,7 +204,13 @@ comandos ::= /*vazio*/ {: RESULT = new Comandos(); :}
 	     | comandos:cmds comando:cmd {: RESULT = cmds.append(cmd); :}
 	     ;
 
-comando ::= PRINTF LPAREN STRING:str RPAREN PTVIRG {: RESULT = new Print(str); :}
+comando ::= 
+		PRINTF LPAREN STRING:str RPAREN PTVIRG {:
+			Print comando = new Print(str);
+			comando.linha = strleft + 1;
+			comando.coluna = strright + 1;
+			RESULT = comando;
+		 :}
 	    | PRINTF LPAREN STRING:str VIRG IDF:i RPAREN PTVIRG {:
 	        PrintId comando = new PrintId(str, new Idf(i));
 	        comando.linha = strleft + 1;
@@ -217,13 +223,38 @@ comando ::= PRINTF LPAREN STRING:str RPAREN PTVIRG {: RESULT = new Print(str); :
 	        Scan comando = new Scan(str, inlst);
 	        comando.linha = strleft + 1;
 	        comando.coluna = strright + 1;
-	        RESULT = new Scan(str,inlst);
+	        RESULT = comando;
 	      :}
-	    | WHILE LPAREN expressao:exp RPAREN LCHAVE comandos:cmds RCHAVE {: RESULT = new ComandoWhile(exp,cmds); :}
-	    | IF LPAREN expressao:exp RPAREN LCHAVE comandos:cmds RCHAVE elsis:elss {: RESULT = new ComandoIf(exp,cmds,elss); :}
-	    | IDF:i ATRIB expressao:exp PTVIRG {: RESULT = new Atribuicao(new Idf(i),exp); :}
-	    | IDF:i LCOLCH expressao:exp1 RCOLCH ATRIB expressao:exp2 PTVIRG {: RESULT = new VetorAtrib(new Idf(i),exp1,exp2); :}
-	    | IDF:i LPAREN expressaoLista:explst RPAREN PTVIRG {: RESULT = new ChamadaFuncao(new Idf(i),explst); :}
+	    | WHILE LPAREN expressao:exp RPAREN LCHAVE comandos:cmds RCHAVE {:
+	    	ComandoWhile comando = new ComandoWhile(exp,cmds);
+	    	comando.linha = expleft + 1;
+	    	comando.coluna = expright + 1;
+	    	RESULT = comando;
+	    :}
+	    | IF LPAREN expressao:exp RPAREN LCHAVE comandos:cmds RCHAVE elsis:elss {:
+	    	ComandoIf comando = new ComandoIf(exp,cmds,elss);
+	    	comando.linha = expleft + 1;
+	    	comando.coluna = expright + 1;
+	    	RESULT = comando;
+	    :}
+	    | IDF:i ATRIB expressao:exp PTVIRG {:
+	    	Atribuicao comando = new Atribuicao(new Idf(i),exp);
+	    	comando.linha = ileft + 1;
+	    	comando.coluna = iright + 1;
+	    	RESULT = comando;
+	    :}
+	    | IDF:i LCOLCH expressao:exp1 RCOLCH ATRIB expressao:exp2 PTVIRG {:
+	    	VetorAtrib comando = new VetorAtrib(new Idf(i),exp1,exp2);
+	    	comando.linha = ileft + 1;
+	    	comando.coluna = iright + 1;
+	    	RESULT = comando;
+	    :}
+	    | IDF:i LPAREN expressaoLista:explst RPAREN PTVIRG {:
+	    	ChamadaFuncao comando = new ChamadaFuncao(new Idf(i),explst);
+	    	comando.linha = ileft + 1;
+	    	comando.coluna = iright + 1;
+	    	RESULT = comando;
+	    :}
 	    | error PTVIRG
 	    ;
 

@@ -46,8 +46,8 @@ int main() {
 
   /**
    * Tipo de expressão não condiz com o identificador w
-   * w = 1.5 + 1; 
-   */
+   */ w = 1.5 + 1; 
+   
   
   /**
    * Erro na chamada de Funcao, este tipo de chamada não pode passar para a parte
