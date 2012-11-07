@@ -404,10 +404,12 @@ public class TypeChecker extends VisitorAdaptor{
       exp.accept(this);
     }
     try{
+      
       //Caso exista um numero insuficiente de parametros para a funcao chamada o try se faz necessario
-      if( CalledFunc.params.isEmpty() ){
-       throw new ArrayIndexOutOfBoundsException();
+      if( CalledFunc.params.isEmpty() && termoFuncao.explst.size() > 0) {
+        throw new ArrayIndexOutOfBoundsException();
       }
+
       for (String key: CalledFunc.params.keySet())
       {
         if(!tabela.compareTypes( CalledFunc.params.get(key).tpo, termoFuncao.explst.elementAt(i).tpo )){
@@ -832,15 +834,19 @@ public class TypeChecker extends VisitorAdaptor{
     int i = 0;
     Expressao exp;
     Enumeration e = chamadaFuncao.explst.elements();
+    
     while(e.hasMoreElements()){
       exp = (Expressao)e.nextElement();
       exp.accept(this);
     }
+    
     try{
+    
       //Caso exista um numero insuficiente de parametros para a funcao chamada o try se faz necessario
       if( CalledFunc.params.isEmpty() && chamadaFuncao.explst.size() > 0) {
         throw new ArrayIndexOutOfBoundsException();
       }
+    
       for (String key: CalledFunc.params.keySet())
       {
         if(!tabela.compareTypes( CalledFunc.params.get(key).tpo, chamadaFuncao.explst.elementAt(i).tpo )){
