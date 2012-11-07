@@ -3,16 +3,28 @@
 float func() {
 	//HAHA
 	float z;
-	printf("Ola meu nome e Joao");
+    printf( " Ola meu nome e Joao " );
 	return z;
 }
 int main(){
-	/*Conta até 4
-	int x = 0;
-	while(x < 5) {
-		x = x + 1;
+
+	/**/
+
+	int x;
+	int i;
+	int soma;
+
+	scanf("%d",&x);
+
+	i = 0;
+	soma = 0;
+
+    while(i < 4) {
+		soma = soma + x;
+		i = i + 1;
     }
-	printf("x = %d",x);
+
+	printf("4 x numero digitado = %d",soma);
 
 	return 1;
 }
