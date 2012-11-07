@@ -6,38 +6,30 @@ import org.tree.*;
 
 parser code  {:
 	
-  public static int erro = 0;
-  
-  public void report_error(String message, Object info) {
-  	erro++;  
-	StringBuffer m = new StringBuffer("\nErro sintatico numero " + erro);
-	if (info instanceof java_cup.runtime.Symbol)	
-	{
-		java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
-		if(s.left >=0)
-		{
-		  m.append(" na linha " + (s.left+1));
-		  /* if(s.right >=0)
-		    m.append(" coluna " + (s.right+1));*/
-		}
-	}
-	System.out.println(m);
-  }
- 
-  public void report_fatal_error (String mensagem, Object info) {
-    report_fatal_error_message(mensagem, info);
-    System.exit(1);
+  public int erro = 0;
+
+  public void syntax_error(Symbol s) {	
+  	
+  	erro++;
+
+  	System.out.println("\n[l"+ (s.left+1) + "|c" + (s.right+1) + "]" + " Erro sintático próximo");
+
   }
 
-  public void report_fatal_error_message (String mensagem, Object info) {
-    erro++;  
-	StringBuffer m = new StringBuffer("Erro sintatico numero " + erro + ".Impossivel recuperar do erro, finalizando parser!");
-	System.out.println(m);
-    System.exit(1);
+  public void report_fatal_error (String mensagem, Object info) {
+    
+    erro ++;
+	
+	System.out.println("\nO parser não foi capaz de se recuperar dos erros anteriores");
+
+	System.out.println("\nCorrija os erros sintáticos e tente outra vez\n");
+
+	System.exit(1);
   }
 
 	public void check(){
-		if(erro > 0){
+		if( erro > 0 ){
+			System.out.println("\nCorrija os erros sintáticos e tente outra vez\n");
 			System.exit(1);
 		}
 	}
